@@ -1,0 +1,434 @@
+<html>
+
+
+<style>
+/* Speech Translate */
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+p {
+  font-weight: normal;
+  margin: 0 0 1rem 0;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+.container {
+  box-sizing: border-box;
+  margin: auto;
+  max-width: 80rem;
+  padding: 2rem;
+}
+
+.input,
+.output {
+  margin-bottom: 1rem;
+}
+
+.disable .disabled-message {
+  background-color: rgb(255, 238, 238);
+  border: 1px dashed rgb(216, 106, 106);
+  display: block;
+  margin: 1rem 0;
+  padding: 2rem;
+}
+
+.disable .input,
+.disable .output {
+  display: none;
+}
+
+.controls {
+  margin-bottom: 1rem;
+}
+
+.results {
+  border: 1px solid #eee;
+  padding: .5rem;
+}
+
+.interim {
+  color: gray;
+}
+
+.final {
+  color: black;
+  padding-right: 3px;
+}
+
+@media (min-width: 50rem) {
+  .columns {
+    display: flex;
+  }
+
+  .input,
+  .output {
+    width: 50%;
+  }
+
+  .input {
+    margin-right: .5rem;
+  }
+
+  .output {
+    margin-left: .5rem;
+  }
+}
+</style>
+<body>
+<div class="container">
+  <h1>Speech Translate</h1>
+  <div class="columns" id="demo">
+    <div class="input">
+      <h2>Input</h2>
+      <div class="controls">
+        <select id="selectLanguage" onchange="SpeechTranslate.updateDialects()"></select>
+        <select id="selectDialect"></select>
+        <button id="buttonStart" onclick="SpeechTranslate.start(event)">Start</button>
+      </div>
+      <div class="results" id="textareaInput">
+        <span class="final" id="final_span"></span>
+        <span class="interim" id="interim_span">none</span>
+      </div>
+    </div>
+    <div class="output">
+      <h2>Output</h2>
+      <div class="controls">
+        <select id="selectVoice"></select>
+      </div>
+      <div class="results" id="textareaOutput">
+        <span class="final" id="final_voice"></span>
+        <span class="interim" id="interim_voice">none</span>
+        <audio src="" hidden></audio>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Speech Translate */
+
+var SpeechTranslate = (function() {
+  if (!window.webkitSpeechRecognition || !window.speechSynthesis) {
+    demo.classList.add('disable');
+    return;
+  }
+  var langs = [
+    ['Afrikaans', ['af-ZA']],
+    ['አማርኛ', ['am-ET']],
+    ['Azərbaycanca', ['az-AZ']],
+    ['বাংলা', ['bn-BD', 'বাংলাদেশ'],
+      ['bn-IN', 'ভারত']
+    ],
+    ['Bahasa Indonesia', ['id-ID']],
+    ['Bahasa Melayu', ['ms-MY']],
+    ['Català', ['ca-ES']],
+    ['Čeština', ['cs-CZ']],
+    ['Dansk', ['da-DK']],
+    ['Deutsch', ['de-DE']],
+    ['English', ['en-AU', 'Australia'],
+      ['en-CA', 'Canada'],
+      ['en-IN', 'India'],
+      ['en-KE', 'Kenya'],
+      ['en-TZ', 'Tanzania'],
+      ['en-GH', 'Ghana'],
+      ['en-NZ', 'New Zealand'],
+      ['en-NG', 'Nigeria'],
+      ['en-ZA', 'South Africa'],
+      ['en-PH', 'Philippines'],
+      ['en-GB', 'United Kingdom'],
+      ['en-US', 'United States']
+    ],
+    ['Español', ['es-AR', 'Argentina'],
+      ['es-BO', 'Bolivia'],
+      ['es-CL', 'Chile'],
+      ['es-CO', 'Colombia'],
+      ['es-CR', 'Costa Rica'],
+      ['es-EC', 'Ecuador'],
+      ['es-SV', 'El Salvador'],
+      ['es-ES', 'España'],
+      ['es-US', 'Estados Unidos'],
+      ['es-GT', 'Guatemala'],
+      ['es-HN', 'Honduras'],
+      ['es-MX', 'México'],
+      ['es-NI', 'Nicaragua'],
+      ['es-PA', 'Panamá'],
+      ['es-PY', 'Paraguay'],
+      ['es-PE', 'Perú'],
+      ['es-PR', 'Puerto Rico'],
+      ['es-DO', 'República Dominicana'],
+      ['es-UY', 'Uruguay'],
+      ['es-VE', 'Venezuela']
+    ],
+    ['Euskara', ['eu-ES']],
+    ['Filipino', ['fil-PH']],
+    ['Français', ['fr-FR']],
+    ['Basa Jawa', ['jv-ID']],
+    ['Galego', ['gl-ES']],
+    ['ગુજરાતી', ['gu-IN']],
+    ['Hrvatski', ['hr-HR']],
+    ['IsiZulu', ['zu-ZA']],
+    ['Íslenska', ['is-IS']],
+    ['Italiano', ['it-IT', 'Italia'],
+      ['it-CH', 'Svizzera']
+    ],
+    ['ಕನ್ನಡ', ['kn-IN']],
+    ['ភាសាខ្មែរ', ['km-KH']],
+    ['Latviešu', ['lv-LV']],
+    ['Lietuvių', ['lt-LT']],
+    ['മലയാളം', ['ml-IN']],
+    ['मराठी', ['mr-IN']],
+    ['Magyar', ['hu-HU']],
+    ['ລາວ', ['lo-LA']],
+    ['Nederlands', ['nl-NL']],
+    ['नेपाली भाषा', ['ne-NP']],
+    ['Norsk bokmål', ['nb-NO']],
+    ['Polski', ['pl-PL']],
+    ['Português', ['pt-BR', 'Brasil'],
+      ['pt-PT', 'Portugal']
+    ],
+    ['Română', ['ro-RO']],
+    ['සිංහල', ['si-LK']],
+    ['Slovenščina', ['sl-SI']],
+    ['Basa Sunda', ['su-ID']],
+    ['Slovenčina', ['sk-SK']],
+    ['Suomi', ['fi-FI']],
+    ['Svenska', ['sv-SE']],
+    ['Kiswahili', ['sw-TZ', 'Tanzania'],
+      ['sw-KE', 'Kenya']
+    ],
+    ['ქართული', ['ka-GE']],
+    ['Հայերեն', ['hy-AM']],
+    ['தமிழ்', ['ta-IN', 'இந்தியா'],
+      ['ta-SG', 'சிங்கப்பூர்'],
+      ['ta-LK', 'இலங்கை'],
+      ['ta-MY', 'மலேசியா']
+    ],
+    ['తెలుగు', ['te-IN']],
+    ['Tiếng Việt', ['vi-VN']],
+    ['Türkçe', ['tr-TR']],
+    ['اُردُو', ['ur-PK', 'پاکستان'],
+      ['ur-IN', 'بھارت']
+    ],
+    ['Ελληνικά', ['el-GR']],
+    ['български', ['bg-BG']],
+    ['Pусский', ['ru-RU']],
+    ['Српски', ['sr-RS']],
+    ['Українська', ['uk-UA']],
+    ['한국어', ['ko-KR']],
+    ['中文', ['cmn-Hans-CN', '普通话 (中国大陆)'],
+      ['cmn-Hans-HK', '普通话 (香港)'],
+      ['cmn-Hant-TW', '中文 (台灣)'],
+      ['yue-Hant-HK', '粵語 (香港)']
+    ],
+    ['日本語', ['ja-JP']],
+    ['हिन्दी', ['hi-IN']],
+    ['ภาษาไทย', ['th-TH']]
+  ];
+  var ignore_onend = false;
+  var recognition = new webkitSpeechRecognition();
+  var recognizing = false;
+  var synth = window.speechSynthesis;
+  var start_timestamp = 0;
+
+
+  var module = {
+    init: function() {
+      console.log('init', this);
+      this.updateLanguages();
+      this.updateDialects();
+      this.updateVoices();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = function() {
+          this.updateVoices();
+        }.bind(this);
+      }
+      this.setup();
+    },
+    setup: function() {
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.onstart = function() {
+        recognizing = true;
+        this.showInfo('info_speak_now');
+      }.bind(this);
+
+      recognition.onerror = function(event) {
+        if (event.error == 'no-speech') {
+          this.showInfo('info_no_speech');
+          ignore_onend = true;
+        }
+        if (event.error == 'audio-capture') {
+          this.showInfo('info_no_microphone');
+          ignore_onend = true;
+        }
+        if (event.error == 'not-allowed') {
+          if (event.timeStamp - start_timestamp < 100) {
+            this.showInfo('info_blocked');
+          } else {
+            this.showInfo('info_denied');
+          }
+          ignore_onend = true;
+        }
+      }.bind(this);
+
+      recognition.onend = function() {
+        recognizing = false;
+        if (ignore_onend) {
+          return;
+        }
+        if (!final_transcript) {
+          this.showInfo('info_start');
+          return;
+        }
+        this.showInfo('');
+        if (window.getSelection) {
+          window.getSelection().removeAllRanges();
+          var range = document.createRange();
+          range.selectNode(document.getElementById('final_span'));
+          window.getSelection().addRange(range);
+        }
+      }.bind(this);
+
+      recognition.onresult = function(event) {
+        var interim_transcript = '';
+        if (typeof(event.results) == 'undefined') {
+          recognition.onend = null;
+          recognition.stop();
+          return;
+        }
+        for (var i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            final_transcript += event.results[i][0].transcript;
+            this.translate(event.results[i][0].transcript);
+          } else {
+            interim_transcript += event.results[i][0].transcript;
+          }
+        }
+        final_transcript = this.capitalize(final_transcript);
+        final_span.innerHTML = this.linebreak(final_transcript);
+        interim_span.innerHTML = this.linebreak(interim_transcript);
+      }.bind(this);
+    },
+    updateLanguages: function() {
+      for (var i = 0; i < langs.length; i++) {
+        selectLanguage.options[i] = new Option(langs[i][0], i);
+      }
+      selectLanguage.selectedIndex = 10; // en
+    },
+    updateDialects: function() {
+      for (var i = selectDialect.options.length - 1; i >= 0; i--) {
+        selectDialect.remove(i);
+      }
+      var list = langs[selectLanguage.selectedIndex];
+      for (var i = 1; i < list.length; i++) {
+        selectDialect.options.add(new Option(list[i][1], list[i][0]));
+      }
+      selectDialect.style.visibility = list[1].length == 1 ? 'hidden' : 'visible';
+      if (selectLanguage.selectedIndex === 10) {
+        selectDialect.selectedIndex = 11; // US
+      }
+    },
+    updateVoices: function() {
+      voices = synth.getVoices();
+      voices.sort(function(a, b) {
+        var nameA = a.lang.toUpperCase();
+        var nameB = b.lang.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
+      console.log('voices', voices.length);
+      for (var i = 0; i < voices.length; i++) {
+        selectVoice.options[i] = new Option(`${voices[i].lang} (${voices[i].name})`, voices[i].lang);
+      }
+      selectVoice.selectedIndex = 20; // output language th = 20
+    },
+
+    start: function(event) {
+      if (recognizing) {
+        //recognition.stop();
+        return;
+      }
+      final_transcript = '';
+      recognition.lang = selectDialect.value;
+      recognition.start();
+      ignore_onend = false;
+      final_span.innerHTML = '';
+      interim_span.innerHTML = '';
+      final_voice.innerHTML = '';
+      interim_voice.innerHTML = '';
+      //this.showInfo('info_allow');
+    },
+    translate: function(text) {
+      var langInput = selectDialect.value.split('-')[0];
+      var langOutput = selectVoice.value.split('-')[0];
+      console.log('translate', langInput, langOutput, text);
+      this.load(`https://translation.googleapis.com/language/translate/v2/?q=${window.encodeURI(text)}?&source=${langInput}&target=${langOutput}&key=AIzaSyDTrDTHs5lMAuUstdLmaAjY-tB79_PMVj0`, function(response) {
+        console.log('translate.success', response);
+        var translation = response.data.translations[0].translatedText;
+        final_voice.innerHTML += ' ' + translation;
+        this.speak(translation); // Call speak
+      }.bind(this));
+    },
+    load: function(url, callback) {
+      console.log('load', url);
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+          callback(JSON.parse(xmlHttp.responseText));
+        }
+      }
+      xmlHttp.open('GET', url, true);
+      xmlHttp.send(null);
+    },
+
+    speak: function(text) {
+      console.log('speak', text);
+      var utterThis = new SpeechSynthesisUtterance(text);
+      utterThis.voice = voices[selectVoice.selectedIndex];
+      utterThis.pitch = 1;
+      utterThis.rate = 1.5;
+      synth.speak(utterThis);
+
+    },
+
+    speak_th: function(text) {
+      let say_text = encodeURIComponent(text);
+      let url = `https://translate.google.com/translate_tts?ie=UTF-8&q='+ say_text +'&tl=th&client=tw-ob`;
+      $('audio').attr('src', url).get(0).play();
+    },
+
+    showInfo: function(message) {
+      return console.log('showInfo', message);
+    },
+    capitalize: function(s) {
+      var first_char = /\S/;
+      return s.replace(first_char, function(m) {
+        return m.toUpperCase();
+      });
+    },
+    linebreak: function(s) {
+      var two_line = /\n\n/g;
+      var one_line = /\n/g;
+      return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
+    }
+  };
+  module.init();
+  return module;
+})();
+</script>
+</body>
+</html>
