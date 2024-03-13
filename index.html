@@ -536,38 +536,74 @@ void main()\r
 
 <body>
     <section>
-        <div class="iframeContainer">
-        </div>
-        <div id="root">
-            <canvas id="canvas"></canvas>
-        </div>
+  	<div id="controlPanel">
+    		<input type="text" id="backgroundURL" placeholder="Enter background URL" value="https://i.imgur.com/AfBMxZ9.png" size="50">
+		<input type="number" id="mistBlurStepInput" value="4" maxlength="1" size="1" style="width: 2em;">
+    		<button id="startButton">Start Rain</button>
+    		<button id="fullScreenButton">Full Screen</button>
+  	</div>
+  	<div id="root">
+    		<canvas id="canvas" width="2048" height="2048"></canvas>
+ 	</div>
     </section>
+	
 	<script>
 	const canvas = document.querySelector("#canvas");
-
-	// Set canvas size to fit the real size
 	const rect = canvas.getBoundingClientRect();
 	canvas.width = rect.width;
 	canvas.height = rect.height;
 
-	const raindropFx = new RaindropFX({
-		canvas: canvas,
-		// background: "path/to/backgroundImage",
-		//background: "https://i.imgur.com/AfBMxZ9.png",
-		background: "./img/bg.png",
-		//spawnSize: [10, 90],
-		//spawnInterval: [0.1, 0.2],
-		mistBlurStep: 3,
-		//dropletsPerSecond: 2000,
-		//backgroundBlurSteps: 1
-	});
-	raindropFx.start();
+	let raindropFx;
 
-	// Resize the effect renderer
-	window.onresize = () =>
-	{
-		const rect = canvas.getBoundingClientRect();
-		raindropFx.resize(rect.width, rect.height);
+	document.getElementById("startButton").addEventListener("click", () => {
+  	const backgroundURL = document.getElementById("backgroundURL").value;
+	const mistBlurStep = parseInt(document.getElementById("mistBlurStepInput").value);
+  	if (!backgroundURL) {
+  	  	alert("Please enter a background URL.");
+   	return;
+  	}
+	if (raindropFx) {
+    		raindropFx.stop(); // Stop the previous animation if it's running
+  	}
+  	raindropFx = new RaindropFX({
+    	canvas: canvas,
+    	background: backgroundURL,
+    	mistBlurStep: mistBlurStep,
+  	});
+
+  	raindropFx.start(); // Start the raindrop effect
+	});
+
+	window.onresize = () => {
+  		const rect = canvas.getBoundingClientRect();
+  		if (raindropFx) {
+    			raindropFx.resize(rect.width, rect.height);
+  		}
+	};
+
+	// Hidden 
+	const controlPanel = document.getElementById('controlPanel');
+	let hidePanelTimer;
+	document.addEventListener('mousemove', showControlPanel);
+	function showControlPanel() {
+	  	controlPanel.style.display = 'block';
+	  	clearTimeout(hidePanelTimer);
+	 	hidePanelTimer = setTimeout(function() {
+	    		controlPanel.style.display = 'none';
+	  	}, 5000);
+	}
+
+	// Full screen
+	const fullScreenButton = document.getElementById('fullScreenButton');
+	fullScreenButton.addEventListener('click', toggleFullScreen);
+	function toggleFullScreen() {
+	  if (!document.fullscreenElement) {
+	    document.documentElement.requestFullscreen();
+	  } else {
+	    if (document.exitFullscreen) {
+	      document.exitFullscreen();
+	    }
+	  }
 	}
 	</script>
 </body>
