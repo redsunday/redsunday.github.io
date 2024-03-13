@@ -536,15 +536,17 @@ void main()\r
 
 <body>
     <section>
-  	<div id="controlPanel">
-    		<input type="text" id="backgroundURL" placeholder="Enter background URL" value="https://i.imgur.com/AfBMxZ9.png" size="50">
-		<input type="number" id="mistBlurStepInput" value="4" maxlength="1" size="1" style="width: 2em;">
-    		<button id="startButton">Start Rain</button>
-    		<button id="fullScreenButton">Full Screen</button>
-  	</div>
-  	<div id="root">
-    		<canvas id="canvas" width="2048" height="2048"></canvas>
- 	</div>
+	<div class="iframeContainer">
+	  	<div id="controlPanel">
+	    		<input type="text" id="backgroundURL" placeholder="Enter background URL" value="https://i.imgur.com/AfBMxZ9.png" size="50">
+			<input type="number" id="mistBlurStepInput" value="4" maxlength="1" size="1" style="width: 2em;">
+	    		<button id="startButton">Start Rain</button>
+	    		<button id="fullScreenButton">Full Screen</button>
+	  	</div>
+	  	<div id="root">
+	    		<canvas id="canvas" width="2048" height="2048"></canvas>
+	 	</div>
+	</div>	
     </section>
 	
 	<script>
