@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--, maximum-scale=1.0, user-scalable=0"-->
     <title>Raindrop Effect</title>
-    <link rel="stylesheet" href="./style.css">
 	<style>
 		body {
 		  margin: 0;
@@ -437,7 +436,7 @@ and limitations under the License.
         <canvas id="canvas" onclick="uploadImage()" ondragover="event.preventDefault();" ondrop="event.preventDefault();">
         </canvas>
     </div>
-    <script>
+    <script>	
 		const canvas = document.querySelector("#canvas");
 		const rect = canvas.getBoundingClientRect();
 		canvas.width = rect.width * 1.6;
@@ -511,5 +510,6 @@ and limitations under the License.
 			reader.readAsDataURL(file);
 		});
 	</script>
+
 </body>
 </html>
