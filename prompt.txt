@@ -91,7 +91,6 @@
 91. professional photography of negative space, Hyper-realistic render of advanced AI robot, human-like features, lab setting --ar 16:9 --v 6
 92. professional photography of negative space, Ultra-sharp image of a futuristic smart home interface, holographic controls, minimalist design --ar 16:9 --v 6
 93. professional photography of negative space, Crystal-clear shot of a next-gen electric vehicle, sleek design, charging station --ar 16:9 --v 6
-94. professional photography of negative space, High-definition capture of a cutting-edge medical procedure, augmented reality assistance --ar 16:9 --v 6
 95. professional photography of negative space, Tack-sharp photo of a quantum computer, complex architecture, cool blue lighting --ar 16:9 --v 6
 96. professional photography of negative space, Hyper-detailed image of a blockchain visualization, interconnected nodes, data flow --ar 16:9 --v 6
 97. professional photography of negative space, Ultra-clear shot of a brain-computer interface in use, neural activity visualization --ar 16:9 --v 6
