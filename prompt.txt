@@ -146,7 +146,6 @@
 148. professional photography of negative space, A drawing of a colorful cookie jar that looks absolutely delicious, in style of a minimalist cartoon  --v 6.0 --style raw
 149. professional photography of negative space, Googles behind the water pool background, close up, focus and bokeh effect. sport concept --ar 128:93 --v 6.0 --style raw
 150. professional photography of negative space, A can of soda,on a rustic wooden table with a red checkered cloth underneath it, with some broken oaky pieces scattered next to it, food photography in the style of dark grey background, side view, centered composition, professional photo --ar 85:128 --v 6.0 --style raw
-151. professional photography of negative space, A photograph of the front view portrait of an Man in a full body dynamic pose on a red background in the style of high fashion moment, with rich colors, dramatic light, in a fantasy art style, with surrealism, elegant details, a golden ratio composition, and detailed texture
 152. professional photography of negative space, A cinematic photograph of a castle in the light of night in front of a nature background  --v 6.0 --style raw
 153. professional photography of negative space, A children story book illustration of a bear dressed with a dress smiling and being happy  --v 6.0 --style raw
 154. professional photography of negative space, A platter of cinnamon rolls with some sugar on the side, on an old blue table top, red cloth in the background, top view, food photography, editorial style photo, high resolution. --ar 85:128 --v 6.0 --style raw
