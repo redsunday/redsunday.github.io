@@ -87,7 +87,6 @@
 87. professional photography of negative space, Ultra-clear capture of a forest bathing session, sunlight through leaves, tranquil expression --ar 16:9 --v 6
 88. professional photography of negative space, High-resolution image of a digital detox scene, books and tea, no electronic devices --ar 16:9 --v 6
 90. professional photography of negative space, Tack-sharp shot of an aromatherapy session, essential oil diffuser, relaxed ambiance --ar 16:9 --v 6
-91. professional photography of negative space, Hyper-realistic render of advanced AI robot, human-like features, lab setting --ar 16:9 --v 6
 92. professional photography of negative space, Ultra-sharp image of a futuristic smart home interface, holographic controls, minimalist design --ar 16:9 --v 6
 93. professional photography of negative space, Crystal-clear shot of a next-gen electric vehicle, sleek design, charging station --ar 16:9 --v 6
 95. professional photography of negative space, Tack-sharp photo of a quantum computer, complex architecture, cool blue lighting --ar 16:9 --v 6
